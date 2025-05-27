@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Window</title>
+    <style>
+        /* Basic styling for the page */
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('new.jpg'); /* Updated Background image */
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Styling the payment container box */
+        .payment-container {
+            width: 400px;
+            margin: 50px auto;
+            background-color: rgba(7, 7, 7, 0.9); /* Semi-transparent background */
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(245, 243, 243, 0.966);
+            border-radius: 10px;
+        }
+
+        /* Header styling */
+        h2 {
+            text-align: center;
+        }
+
+        /* Form input styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Submit button styling */
+        .form-group button {
+            width: 100%;
+            padding: 15px;
+            background-color: #f54d0a;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Hover effect for the button */
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+
+        /* QR code display container */
+        .qr-container {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .qr-container img {
+            width: 150px;
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Payment form container -->
+    <div class="payment-container">
+        <h2>Payment Window</h2>
+
+        <form id="payment-form">
+            <!-- Amount field: will be automatically filled via URL -->
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" name="amount" placeholder="Amount will be calculated" readonly required>
+            </div>
+
+            <!-- Payment method selection dropdown -->
+            <div class="form-group">
+                <label for="payment-method">Choose Payment Method</label>
+                <select id="payment-method" name="payment-method">
+                    <option value="credit-card">Credit / Debit Card</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="google-pay">Google Pay</option>
+                    <option value="apple-pay">Apple Pay</option>
+                    <option value="bank-transfer">Bank Transfer</option>
+                </select>
+            </div>
+
+            <!-- Credit Card Input (only visible when 'Credit Card' is selected) -->
+            <div id="credit-card-fields" class="form-group" style="display: none;">
+                <label for="card-number">Card Number</label>
+                <input type="text" id="card-number" name="card-number" placeholder="Enter card number" required>
+
+                <label for="card-expiry">Expiry Date (MM/YY)</label>
+                <input type="text" id="card-expiry" name="card-expiry" placeholder="MM/YY" required>
+
+                <label for="card-cvc">CVC</label>
+                <input type="number" id="card-cvc" name="card-cvc" placeholder="CVC" required>
+            </div>
+
+            <!-- PayPal Input (only visible when 'PayPal' is selected) -->
+            <div id="paypal-fields" class="form-group" style="display: none;">
+                <label for="paypal-email">PayPal Email</label>
+                <input type="email" id="paypal-email" name="paypal-email" placeholder="Enter PayPal email" required>
+
+                <!-- PayPal QR code (only visible when 'PayPal' is selected) -->
+                <div class="qr-container" id="paypal-qr" style="display: none;">
+                    <img src="QR.jpeg" alt="PayPal QR">
+                    <p>Scan this QR for PayPal</p>
+                </div>
+            </div>
+
+            <!-- Google Pay Input (only visible when 'Google Pay' is selected) -->
+            <div id="google-pay-fields" class="form-group" style="display: none;">
+                <label for="google-email">Google Pay Email</label>
+                <input type="email" id="google-email" name="google-email" placeholder="Enter Google Pay email" required>
+
+                <!-- Google Pay QR code (only visible when 'Google Pay' is selected) -->
+                <div class="qr-container" id="google-pay-qr" style="display: none;">
+                    <img src="QR.jpeg" alt="Google Pay QR">
+                    <p>Scan this QR for Google Pay</p>
+                </div>
+            </div>
+
+            <!-- Apple Pay Input (only visible when 'Apple Pay' is selected) -->
+            <div id="apple-pay-fields" class="form-group" style="display: none;">
+                <label for="apple-email">Apple Pay Email</label>
+                <input type="email" id="apple-email" name="apple-email" placeholder="Enter Apple Pay email" required>
+
+                <!-- Apple Pay QR code (only visible when 'Apple Pay' is selected) -->
+                <div class="qr-container" id="apple-pay-qr" style="display: none;">
+                    <img src="QR.jpeg" alt="Apple Pay QR">
+                    <p>Scan this QR for Apple Pay</p>
+                </div>
+            </div>
+
+            <!-- Bank Transfer Input (only visible when 'Bank Transfer' is selected) -->
+            <div id="bank-transfer-fields" class="form-group" style="display: none;">
+                <label for="bank-account">Bank Account Number</label>
+                <input type="text" id="bank-account" name="bank-account" placeholder="Enter bank account number" required>
+            </div>
+
+            <!-- Submit button to make the payment -->
+            <div class="form-group">
+                <button type="button" id="submit-payment">Make Payment</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Function to fetch the amount from the URL and display it
+        function fetchAmountFromURL() {
+            const urlParams = new URLSearchParams(window.location.search); // Fetch the URL parameters
+            const amount = urlParams.get('amount'); // Get the 'amount' parameter value
+            if (amount) {
+                document.getElementById('amount').value = amount; // Display the amount in the form
+            }
+        }
+
+        // JavaScript to handle dynamic payment method selection and show/hide related fields
+        const paymentMethodSelect = document.getElementById('payment-method');
+        const creditCardFields = document.getElementById('credit-card-fields');
+        const paypalFields = document.getElementById('paypal-fields');
+        const googlePayFields = document.getElementById('google-pay-fields');
+        const applePayFields = document.getElementById('apple-pay-fields');
+        const bankTransferFields = document.getElementById('bank-transfer-fields');
+        
+        // QR code containers for different payment methods
+        const paypalQr = document.getElementById('paypal-qr');
+        const googlePayQr = document.getElementById('google-pay-qr');
+        const applePayQr = document.getElementById('apple-pay-qr');
+
+        // Event listener to handle payment method change
+        paymentMethodSelect.addEventListener('change', function() {
+            // Hide all input fields and QR codes initially
+            creditCardFields.style.display = 'none';
+            paypalFields.style.display = 'none';
+            googlePayFields.style.display = 'none';
+            applePayFields.style.display = 'none';
+            bankTransferFields.style.display = 'none';
+            paypalQr.style.display = 'none';
+            googlePayQr.style.display = 'none';
+            applePayQr.style.display = 'none';
+
+            // Show the relevant fields based on the selected payment method
+            if (paymentMethodSelect.value === 'credit-card') {
+                creditCardFields.style.display = 'block';
+            } else if (paymentMethodSelect.value === 'paypal') {
+                paypalFields.style.display = 'block';
+                paypalQr.style.display = 'block'; // Show PayPal QR code
+            } else if (paymentMethodSelect.value === 'google-pay') {
+                googlePayFields.style.display = 'block';
+                googlePayQr.style.display = 'block'; // Show Google Pay QR code
+            } else if (paymentMethodSelect.value === 'apple-pay') {
+                applePayFields.style.display = 'block';
+                applePayQr.style.display = 'block'; // Show Apple Pay QR code
+            } else if (paymentMethodSelect.value === 'bank-transfer') {
+                bankTransferFields.style.display = 'block';
+            }
+        });
+
+        // Initialize the page on load by fetching the amount and triggering the payment method change
+        window.onload = function() {
+            fetchAmountFromURL(); // Fetch and display the amount
+            paymentMethodSelect.dispatchEvent(new Event('change')); // Trigger the default view change
+        };
+
+        // Handle the form submission (redirection to invoice.html with query params)
+        document.getElementById('submit-payment').addEventListener('click', function() {
+            const amount = document.getElementById('amount').value;
+            const paymentMethod = document.getElementById('payment-method').value;
+            const formData = new URLSearchParams();
+
+            // Add form data based on the selected payment method
+            formData.append('amount', amount);
+            formData.append('paymentMethod', paymentMethod);
+            
+            // Add other payment method specific fields to the data
+            if (paymentMethod === 'credit-card') {
+                formData.append('cardNumber', document.getElementById('card-number').value);
+                formData.append('cardExpiry', document.getElementById('card-expiry').value);
+                formData.append('cardCvc', document.getElementById('card-cvc').value);
+            } else if (paymentMethod === 'paypal') {
+                formData.append('paypalEmail', document.getElementById('paypal-email').value);
+            } else if (paymentMethod === 'google-pay') {
+                formData.append('googleEmail', document.getElementById('google-email').value);
+            } else if (paymentMethod === 'apple-pay') {
+                formData.append('appleEmail', document.getElementById('apple-email').value);
+            } else if (paymentMethod === 'bank-transfer') {
+                formData.append('bankAccount', document.getElementById('bank-account').value);
+            }
+
+            // Redirect to invoice.html with the form data as query parameters
+            window.location.href = `invoice.html?${formData.toString()}`;
+        });
+    </script>
+</body>
+</html>

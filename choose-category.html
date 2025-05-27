@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Category - Hanuman Travels</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Space between containers */
+            align-items: center;
+            background-image: url('new.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            color: white;
+            transition: background 1s ease;
+        }
+        .container {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)); /* Gradient background */
+            padding: 10px; /* Adjusted padding */
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            max-width: 800px; /* Set to medium size */
+            width: 80%;
+            margin-top: 20px; /* Space above the first container */
+        }
+        h1 {
+            font-size: 48px;
+            color: #ffdd57;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Text shadow for depth */
+        }
+        p {
+            font-size: 22px;
+            margin-bottom: 30px;
+        }
+        .slider {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .slides {
+            display: flex;
+            width: 100%;
+            transition: transform 0.7s ease-in-out;
+        }
+        .slide {
+            width: 100%;
+            flex-shrink: 0;
+            position: relative; /* For caption positioning */
+        }
+        .slide img {
+            width: 100%;
+            border-radius: 15px;
+            object-fit: cover;
+        }
+        .caption {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 30px;
+            padding: 15px;
+            border: none;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+        .prev { left: 15px; }
+        .next { right: 15px; }
+        .prev:hover, .next:hover { background-color: rgba(0, 0, 0, 0.9); }
+        .category-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 40px;
+        }
+        .category-buttons button {
+            background-color: #28a745;
+            color: white;
+            font-size: 18px;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .category-buttons button:hover {
+            background-color: #218838;
+            transform: scale(1.1);
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: white;
+            padding: 15px 0;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+        footer .contact-info {
+            font-size: 16px;
+            color: #28a745;
+        }
+        footer .contact-info p { margin: 5px 0; }
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            h1 { font-size: 28px; }
+            .category-buttons button { font-size: 16px; padding: 10px 24px; }
+            footer { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Choose Your Bus Category</h1>
+        <div class="slider">
+            <div class="slides">
+                <div class="slide">
+                    <img src="image.png" alt="Luxury Bus" loading="lazy">
+                    <div class="caption">Luxury Bus</div>
+                </div>
+                <div class="slide">
+                    <img src="image copy.png" alt="Deluxe Bus" loading="lazy">
+                    <div class="caption">Deluxe Bus</div>
+                </div>
+                <div class="slide">
+                    <img src="image copy 2.png" alt="Standard Bus" loading="lazy">
+                    <div class="caption">Standard Bus</div>
+                </div>
+            </div>
+            <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+            <button class="next" onclick="moveSlide(1)">&#10095;</button>
+        </div>
+    </div>
+    <div class="category-buttons">
+        <button onclick="window.location.href='reservation-form.html?category=luxury'">Luxury Bus</button>
+        <button onclick="window.location.href='reservation-form.html?category=deluxe'">Deluxe Bus</button>
+        <button onclick="window.location.href='reservation-form.html?category=standard'">Standard Bus</button>
+    </div>
+    <footer>
+        <p>&copy; 2024 Hanuman Travels. All rights reserved.</p>
+        <div class="contact-info">
+            <p>Contact us: <strong>7409469513</strong></p>
+            <p>Email: <strong>support@hanumantravels.com</strong></p>
+        </div>
+    </footer>
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelector('.slides');
+        const totalSlides = document.querySelectorAll('.slides .slide').length;
+
+        function moveSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) { currentSlide = totalSlides - 1; }
+            if (currentSlide >= totalSlides) { currentSlide = 0; }
+            slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Travel - Hanuman Travels</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-image: url('new.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            color: white;
+            transition: background 1s ease;
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 80%;
+        }
+        h1 {
+            font-size: 48px;
+            color: #ffdd57;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 22px;
+            margin-bottom: 40px;
+        }
+        button {
+            background-color: #ff5722;
+            color: white;
+            font-size: 22px;
+            padding: 18px 50px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #e64a19;
+        }
+        .contact-info {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 18px;
+            color: #ffdd57;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Select Your Travel Destination</h1>
+    <form id="travel-form">
+        <div class="form-group">
+            <label for="departure">Departure Location</label>
+            <select id="departure" name="departure" required>
+                <option value="" disabled selected>Select your departure location</option>
+                <option value="Agra">Agra</option>
+                <option value="Kanpur">Kanpur</option>
+                <option value="Varanasi">Varanasi</option>
+                <option value="Lucknow">Lucknow</option>
+                <option value="Meerut">Meerut</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="destination">Destination Location</label>
+            <select id="destination" name="destination" required>
+                <option value="" disabled selected>Select your destination</option>
+                <option value="Agra">Agra</option>
+                <option value="Kanpur">Kanpur</option>
+                <option value="Varanasi">Varanasi</option>
+                <option value="Lucknow">Lucknow</option>
+                <option value="Meerut">Meerut</option>
+            </select>
+        </div>
+        <div class="price" id="price-display">
+            Select departure and destination to see the price.
+        </div>
+        <div class="form-group">
+            <button type="button" id="calculate-and-proceed">Proceed to Payment</button>
+        </div>
+    </form>
+</div>
+
+<div class="contact-info">
+    <p>For more information, <a href="mailto:info@hanumantravels.com">contact us</a>.</p>
+</div>
+
+<script>
+    const cityDistances = {
+        "Agra": { "Kanpur": 200, "Varanasi": 300, "Lucknow": 250, "Meerut": 100 },
+        "Kanpur": { "Agra": 200, "Varanasi": 220, "Lucknow": 90, "Meerut": 180 },
+        "Varanasi": { "Agra": 300, "Kanpur": 220, "Lucknow": 300, "Meerut": 350 },
+        "Lucknow": { "Agra": 250, "Kanpur": 90, "Varanasi": 300, "Meerut": 275 },
+        "Meerut": { "Agra": 100, "Kanpur": 180, "Varanasi": 350, "Lucknow": 275 }
+    };
+    const pricePerKm = 2;
+    function updatePrice() {
+        const departure = document.getElementById("departure").value;
+        const destination = document.getElementById("destination").value;
+        const priceDisplay = document.getElementById("price-display");
+        if (departure && destination && cityDistances[departure] && cityDistances[departure][destination]) {
+            const distance = cityDistances[departure][destination];
+            const price = distance * pricePerKm;
+            priceDisplay.textContent = `Distance: ${distance} km | Price: ₹${price}`;
+        } else {
+            priceDisplay.textContent = 'Select departure and destination to see the price.';
+        }
+    }
+    document.getElementById("departure").addEventListener("change", updatePrice);
+    document.getElementById("destination").addEventListener("change", updatePrice);
+    document.getElementById("calculate-and-proceed").addEventListener("click", function() {
+        const departure = document.getElementById("departure").value;
+        const destination = document.getElementById("destination").value;
+        const price = cityDistances[departure] && cityDistances[departure][destination] ? cityDistances[departure][destination] * pricePerKm : 0;
+        if (price > 0) {
+            window.location.href = `PAYMENT.html?amount=${price}`;
+        } else {
+            alert('Please select valid departure and destination locations.');
+        }
+    });
+</script>
+
+</body>
+</html>
